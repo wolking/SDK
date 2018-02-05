@@ -1,5 +1,6 @@
 
 # EasyIoT SDK 说明
+
 本 SDK 使用 ANSI C 实现了 EasyIoT 终端接口协议，使用简单的 API 抽象，实现了NB-IoT数据上送与下行指令处理、响应等。
 核心文件 `easyiot.c` 代码行数仅千行左右，结构精简，易于阅读与修改。
 
@@ -9,7 +10,7 @@
 
 不同平台编译，本SDK代码在gcc、msvc、armcc中编译测试通过
 
-##基础用法
+## 基础用法
 
 基础流程
 
@@ -22,9 +23,11 @@ AT指令
 
 非BC95模组
 重写CoapOutput函数，如AT+ZIPSEND等
-##API
 
-###结构体
+## API
+
+### 结构体
+
 ```cpp
 enum CoapMessageType {
 	CMT_USER_UP = 0xF0,
@@ -37,6 +40,7 @@ enum CoapMessageType {
 	CMT_SYS_QUERY_RSP = 0xF7
 };
 ```
+
 CoAP数据类型，分别为用户数据上行，平台下发数据收到确认ACK，用户自平台下发到设备的指令，用户对指令的响应，CMT_SYS的则是EasyIoT公有数据格式，可选择性实现，具体定义在文档中心-终端接口协议中有描述。
 
 ```cpp
@@ -47,7 +51,9 @@ struct TLV {
 	uint8_t *value;
 };
 ```
+
 TLV结构体，EasyIoT平台与终端通讯格式，使用了TLV，其中vformat字段标注了本TLV中存储了何种格式的数据，其定义在枚举 `enum TlvValueType`中，包括了如 INT、FLOAT、DOUBLE等常见格式。
+
 ```cpp
 #define MESSAGE_MAX_TLV 32
 struct Messages {
@@ -79,6 +85,7 @@ struct Messages {
 	struct TLV* tlvs[MESSAGE_MAX_TLV];
 };
 ```
+
 Message结构体为EasyIoT平台数据格式抽象，各字段释义见注释；
 
 ```cpp
@@ -91,13 +98,15 @@ enum LoggingLevel {
 	LOG_FATAL
 };
 ```
+
 日志输出等级，可使用SetLogLevel控制日志输出等级。
 
-###函数
+### 函数
 
 ```cpp
 void EasyIotInit(const char* imei, const char* imsi);
 ```
+
 SDK初始化，使用IMEI与IMSI初始化，
 
 ```cpp
@@ -149,6 +158,7 @@ int GetDouble(const struct Messages* msg, uint8_t type, double* v);
 int GetString(const struct Messages* msg, uint8_t type, char** v);
 int GetBinary(const struct Messages* msg, uint8_t type, uint8_t** v);
 ```
+
 从一个Message对象中，获取指定传感器的值，以指定的类型。
 
 pushMessages
